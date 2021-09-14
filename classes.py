@@ -7,7 +7,7 @@ VEGA_T = 9600 * u.K
 VEGA_V = 5500 * u.AA
 VEGA_BBl = 3.63e-9 * u.erg * u.s**-1 * u.cm**-2 * u.AA**-1
 VEGA_BBn = ((VEGA_V**2/c.c)*VEGA_BBl).to(u.erg * u.s**-1 * u.cm**-2 * u.Hz**-1)
-
+VEGA_wl_ENG = (c.h * c.c / VEGA_V).to(u.erg)
 class Source:
     """
     Defining Source object: it has a flux one can observe from it at a certain
@@ -37,6 +37,9 @@ class Source:
         self.frequencies = self.wavelengths.to(u.Hz, equivalencies=u.spectral())
         self.F_nu = ((wavelengths**2/c.c)*(self.F_lambda*VEGA_BBl)).to(u.erg * u.s**-1 * u.cm**-2 * u.Hz**-1)
         self.F_nu /= VEGA_BBn
+        
+        self.f_nu = self.F_nu / VEGA_wl_ENG
+        self.f_lambda = self.F_lambda / VEGA_wl_ENG
     
 class Atmosphere:
     
@@ -86,10 +89,11 @@ class Instrument:
     '''
     describing the instrumental uncertainties'''
     
-    def __init__(self, i_lambda, name=''):
+    def __init__(self, i_lambda, sigma_rn = None, pixel_scale = None, name=''):
         
         self.i_lambda = i_lambda
         self.name=name
+        self.sigma_rn = sigma_rn
                     
     def throughput(self,wavelength): 
         if self.name == '' :
