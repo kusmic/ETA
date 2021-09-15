@@ -93,6 +93,7 @@ class Instrument:
         self.i_lambda = i_lambda
         self.name=name
         self.sigma_rn = sigma_rn
+        self.pixel_scale = pixel_scale
                     
     def throughput(self,wavelength): 
         if self.name == '' :
