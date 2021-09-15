@@ -37,8 +37,8 @@ class Source:
         self.frequencies = self.wavelengths.to(u.Hz, equivalencies=u.spectral())
         self.F_nu = ((wavelengths**2/c.c)*(self.F_lambda)).to(u.erg * u.s**-1 * u.cm**-2 * u.Hz**-1)
         
-        self.f_nu = self.F_nu / VEGA_wl_ENG
-        self.f_lambda = self.F_lambda / VEGA_wl_ENG
+        self.f_nu = self.F_nu / ((c.h*self.frequencies).to(u.erg))
+        self.f_lambda = self.F_lambda ((c.c * c.h / self.wavelengths).to(u.erg))
     
 class Atmosphere:
     
