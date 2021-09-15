@@ -31,12 +31,11 @@ class Source:
             exponent = exponent.decompose()
             exponential = np.exp( exponent.value )
             B = (2 * c.h * c.c**2/(wavelengths**5)) * (1/ (exponential-1))
-            self.F_lambda = B.to(u.erg * u.s**-1 * u.cm**-2 * u.AA**-1)/VEGA_BBl
+            self.F_lambda = B.to(u.erg * u.s**-1 * u.cm**-2 * u.AA**-1)
         else:
             self.F_lambda = flux_density_lambda.to(u.erg * u.s**-1 * u.cm**-2 * u.AA**-1)/VEGA_BBl.to(u.erg * u.s**-1 * u.cm**-2 * u.AA**-1)
         self.frequencies = self.wavelengths.to(u.Hz, equivalencies=u.spectral())
-        self.F_nu = ((wavelengths**2/c.c)*(self.F_lambda*VEGA_BBl)).to(u.erg * u.s**-1 * u.cm**-2 * u.Hz**-1)
-        self.F_nu /= VEGA_BBn
+        self.F_nu = ((wavelengths**2/c.c)*(self.F_lambda)).to(u.erg * u.s**-1 * u.cm**-2 * u.Hz**-1)
         
         self.f_nu = self.F_nu / VEGA_wl_ENG
         self.f_lambda = self.F_lambda / VEGA_wl_ENG
