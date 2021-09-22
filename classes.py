@@ -88,11 +88,14 @@ class Instrument:
     '''
     describing the instrumental uncertainties'''
     
-    def __init__(self, i_lambda, sigma_rn = None, pixel_scale = None, name=''):
+    def __init__(self, i_lambda, datatype="imaging", dispersion=None, sigma_rn = None, pixel_scale = None, name=''):
         
         self.i_lambda = i_lambda
         self.name=name
-        self.sigma_rn = sigma_rn
+        if datatype == "imaging":
+            self.sigma_rn = sigma_rn
+        elif datatype == "spectra"
+            self.dispersion = dispersion
                     
     def throughput(self,wavelength): 
         if self.name == '' :
