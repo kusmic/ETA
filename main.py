@@ -6,7 +6,7 @@ from routines import get_SNR, get_exposure_time
 if __name__ == "__main__":
     dlam = 1
     lam_arr = np.arange(4000, 9000, dlam) * u.AA
-    test_source = cl.Source(lam_arr, BB=True, T_rad = 6000*u.K)
+    test_source = cl.Source(lam_arr, BB=True, T_rad = 6000*u.K, Vega_norm=True)
     test_atmos = cl.Atmosphere(np.ones(lam_arr.size)*0.5)
     part_thruput = np.power(0.3, 1/3)
     test_tele = cl.Telescope(part_thruput, diameter=0.6*u.m, mirrors=[part_thruput])
@@ -16,8 +16,8 @@ if __name__ == "__main__":
     test_band = cl.Filter(np.ones(lam_arr.size)*0.8)
     test_BgSB = 1000 / u.arcsec**2 / u.s
     test_exposure_t = 100 * u.s
-    test_aper_radius = 3600 * 5 * u.arcsec
-    test_SNR = 10
+    test_aper_radius = 2 * u.arcsec
+    test_SNR = 100
     
     obs_SNR = get_SNR(test_exposure_t, test_BgSB, test_aper_radius, test_source,
                       test_atmos, test_tele, test_mirror, test_inst, test_band)

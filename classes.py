@@ -15,7 +15,7 @@ class Source:
     """
     
     def __init__(self, wavelengths, flux_density_lambda = None, T_rad = None, 
-                 BB=True):
+                 BB=True, Vega_norm=False):
         """
         wavelength: numpy ndarray of wavelength values, should have units.
         flux density_lambda: Flux density in wavelength units (cgs)
@@ -33,7 +33,13 @@ class Source:
             B = (2 * c.h * c.c**2/(wavelengths**5)) * (1/ (exponential-1))
             self.F_lambda = B.to(u.erg * u.s**-1 * u.cm**-2 * u.AA**-1)
         else:
-            self.F_lambda = flux_density_lambda.to(u.erg * u.s**-1 * u.cm**-2 * u.AA**-1)/VEGA_BBl.to(u.erg * u.s**-1 * u.cm**-2 * u.AA**-1)
+            self.F_lambda = flux_density_lambda.to(u.erg * u.s**-1 * u.cm**-2 * u.AA**-1)
+        
+        if Vega_norm == True:
+            index_5500 = np.where(self.wavelengths.value==5500)
+            flux_5500 = self.F_lambda[index_5500]
+            self.F_lambda = self.F_lambda / flux_5500
+            self.F_lambda = self.F_lambda * VEGA_BBl 
         self.frequencies = self.wavelengths.to(u.Hz, equivalencies=u.spectral())
         self.F_nu = ((wavelengths**2/c.c)*(self.F_lambda)).to(u.erg * u.s**-1 * u.cm**-2 * u.Hz**-1)
         
