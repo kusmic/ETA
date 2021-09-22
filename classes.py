@@ -2,6 +2,7 @@
 import numpy as np
 import astropy.units as u
 import astropy.constants as c
+from astropy.modeling.models import BlackBody1D
 
 VEGA_T = 9600 * u.K
 VEGA_V = 5500 * u.AA
@@ -27,21 +28,22 @@ class Source:
         self.wavelengths = wavelengths.to(u.AA)
         self.__isBB__ = BB
         if BB == True:
-            exponent = c.h * c.c / (wavelengths * c.k_B * T_rad)
-            exponent = exponent.decompose()
-            exponential = np.exp( exponent.value )
-            B = (2 * c.h * c.c**2/(wavelengths**5)) * (1/ (exponential-1))
-            self.F_lambda = B.to(u.erg * u.s**-1 * u.cm**-2 * u.AA**-1)
+            bb_model = BlackBody1D(temperature=T_rad)
+            self.frequencies = self.wavelengths.to(u.Hz, equivalencies=u.spectral())
+            self.F_nu = bb_model(self.wavelengths)
+            self.F_lambda = ((self.frequencies**2/c.c)*self.F_nu).to(u.erg * u.s**-1 * u.cm**-2 * u.AA**-1,
+                            equivalencies=u.spectral())
+            
         else:
             self.F_lambda = flux_density_lambda.to(u.erg * u.s**-1 * u.cm**-2 * u.AA**-1)
-        
+            self.frequencies = self.wavelengths.to(u.Hz, equivalencies=u.spectral())
+            self.F_nu = ((wavelengths**2/c.c)*(self.F_lambda)).to(u.erg * u.s**-1 * u.cm**-2 * u.Hz**-1)
+            
         if Vega_norm == True:
             index_5500 = np.where(self.wavelengths.value==5500)
             flux_5500 = self.F_lambda[index_5500]
             self.F_lambda = self.F_lambda / flux_5500
             self.F_lambda = self.F_lambda * VEGA_BBl 
-        self.frequencies = self.wavelengths.to(u.Hz, equivalencies=u.spectral())
-        self.F_nu = ((wavelengths**2/c.c)*(self.F_lambda)).to(u.erg * u.s**-1 * u.cm**-2 * u.Hz**-1)
         
         self.f_nu = self.F_nu / ((c.h*self.frequencies).to(u.erg))
         self.f_lambda = self.F_lambda / ((c.c * c.h / self.wavelengths).to(u.erg))

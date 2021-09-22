@@ -39,7 +39,6 @@ def get_SNR(t, BG, aperture_radius, source, atmosphere, telescope, mirror,
     elif limit == "readout":
         SNR = S / np.sqrt(Nsig)
     else:
-        print(S,B,Nsig)
         SNR = S / np.sqrt(S + B + Nsig)
         
     return SNR
