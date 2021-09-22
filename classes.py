@@ -92,15 +92,12 @@ class Instrument:
         
         self.i_lambda = i_lambda
         self.name=name
-<<<<<<< HEAD
+
         if datatype == "imaging":
             self.sigma_rn = sigma_rn
-        elif datatype == "spectra"
+        elif datatype == "spectra":
             self.dispersion = dispersion
-=======
-        self.sigma_rn = sigma_rn
         self.pixel_scale = pixel_scale
->>>>>>> 46276da5b8941573ed5946bde1c3612025ed4d68
                     
     def throughput(self,wavelength): 
         if self.name == '' :
