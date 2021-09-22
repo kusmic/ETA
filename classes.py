@@ -38,7 +38,7 @@ class Source:
         self.F_nu = ((wavelengths**2/c.c)*(self.F_lambda)).to(u.erg * u.s**-1 * u.cm**-2 * u.Hz**-1)
         
         self.f_nu = self.F_nu / ((c.h*self.frequencies).to(u.erg))
-        self.f_lambda = self.F_lambda ((c.c * c.h / self.wavelengths).to(u.erg))
+        self.f_lambda = self.F_lambda / ((c.c * c.h / self.wavelengths).to(u.erg))
     
 class Atmosphere:
     
@@ -58,7 +58,7 @@ class Telescope:
             
     def area(self):
        ''' gives telescope area for diameter (self.diameter) in sq cm'''
-       return (np.pi*(self.diameter/2)**2*(1-self.eps**2).to(u.cm**2))
+       return (np.pi*(self.diameter/2)**2*(1-self.eps**2)).to(u.cm**2)
                     
     def throughput(self,wavelength): 
        ''' gives throughput (efficiency) for the telescope '''
@@ -88,7 +88,8 @@ class Instrument:
     '''
     describing the instrumental uncertainties'''
     
-    def __init__(self, i_lambda, datatype="imaging", dispersion=None, sigma_rn = None, pixel_scale = None, name=''):
+    def __init__(self, i_lambda, datatype="imaging", dispersion=None, 
+                 sigma_rn = None, pixel_scale = None, name=''):
         
         self.i_lambda = i_lambda
         self.name=name
